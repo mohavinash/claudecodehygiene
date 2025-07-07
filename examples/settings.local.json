@@ -1,0 +1,99 @@
+{
+  "settings": {
+    "parallel": true,
+    "maxParallel": 4,
+    "timing": true,
+    "timingThreshold": 5000,
+    "debug": false,
+    "verbosity": 1
+  },
+  "hookGroups": {
+    "formatting": [
+      {
+        "name": "prettier",
+        "command": "prettier --write",
+        "pattern": "\\.(js|jsx|ts|tsx|json|css|scss|md)$",
+        "autoFix": true
+      }
+    ],
+    "linting": [
+      {
+        "name": "eslint",
+        "command": "eslint --fix",
+        "pattern": "\\.(js|jsx|ts|tsx)$",
+        "autoFix": true
+      }
+    ],
+    "validation": [
+      {
+        "name": "typecheck",
+        "command": "tsc --noEmit",
+        "pattern": "\\.ts$",
+        "stopOnError": true
+      }
+    ],
+    "documentation": [
+      {
+        "name": "jsdoc",
+        "command": "./hooks/jsdoc-validator.sh",
+        "pattern": "\\.(js|jsx|ts|tsx)$",
+        "stopOnError": false
+      }
+    ],
+    "security": [
+      {
+        "name": "secrets-scan",
+        "command": "detect-secrets scan",
+        "pattern": ".*",
+        "stopOnError": true
+      }
+    ]
+  },
+  "hooks": {
+    "pre-commit": [
+      { "useGroup": "formatting" },
+      { "useGroup": "linting" },
+      { "useGroup": "validation" },
+      { "useGroup": "documentation" },
+      { "useGroup": "security" },
+      {
+        "name": "test-affected",
+        "command": "jest --findRelatedTests",
+        "pattern": "\\.(js|jsx|ts|tsx)$",
+        "stopOnError": false
+      },
+      {
+        "name": "bundle-size",
+        "command": "bundlesize",
+        "pattern": "package\\.json$",
+        "stopOnError": false
+      }
+    ],
+    "pre-push": [
+      {
+        "name": "test-all",
+        "command": "npm test",
+        "pattern": ".*",
+        "stopOnError": true
+      },
+      {
+        "name": "security-audit",
+        "command": "npm audit --audit-level=moderate",
+        "pattern": "package\\.json$",
+        "stopOnError": false
+      }
+    ],
+    "post-merge": [
+      {
+        "name": "install-deps",
+        "command": "npm install",
+        "pattern": "package\\.json$"
+      },
+      {
+        "name": "typecheck-full",
+        "command": "tsc",
+        "pattern": "tsconfig\\.json$"
+      }
+    ]
+  }
+}

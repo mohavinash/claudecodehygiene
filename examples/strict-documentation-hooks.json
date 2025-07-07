@@ -1,0 +1,69 @@
+{
+  "settings": {
+    "parallel": false,
+    "timing": true,
+    "debug": true,
+    "verbosity": 2
+  },
+  "hooks": {
+    "pre-commit": [
+      {
+        "name": "jsdoc-strict",
+        "command": "./hooks/jsdoc-validator.sh --strict",
+        "pattern": "\\.(js|jsx|ts|tsx)$",
+        "stopOnError": true
+      },
+      {
+        "name": "markdown-lint",
+        "command": "markdownlint",
+        "pattern": "\\.md$",
+        "autoFix": true,
+        "stopOnError": true
+      },
+      {
+        "name": "readme-check",
+        "command": "test -f README.md",
+        "pattern": ".*",
+        "stopOnError": true
+      },
+      {
+        "name": "changelog-update",
+        "command": "conventional-changelog -p angular -i CHANGELOG.md -s",
+        "pattern": "package\\.json$",
+        "autoFix": true
+      },
+      {
+        "name": "api-doc-gen",
+        "command": "typedoc --out docs/api",
+        "pattern": "\\.(ts|tsx)$",
+        "stopOnError": false
+      },
+      {
+        "name": "comment-ratio",
+        "command": "cloc . --quiet --csv | awk -F, 'NR>1 {code+=$5; comment+=$4} END {ratio=comment/(code+comment)*100; if(ratio<20) exit 1; print \"Comment ratio: \" ratio \"%\"}'",
+        "pattern": "\\.(js|jsx|ts|tsx)$",
+        "stopOnError": true
+      },
+      {
+        "name": "license-check",
+        "command": "license-checker --production --onlyAllow 'MIT;Apache-2.0;BSD-3-Clause;BSD-2-Clause;ISC'",
+        "pattern": "package\\.json$",
+        "stopOnError": true
+      }
+    ],
+    "pre-push": [
+      {
+        "name": "docs-build",
+        "command": "npm run docs:build",
+        "pattern": ".*",
+        "stopOnError": true
+      },
+      {
+        "name": "docs-spell-check",
+        "command": "cspell '**/*.{md,js,ts}'",
+        "pattern": "\\.(md|js|ts)$",
+        "stopOnError": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "settings": {
+    "debug": false
+  },
+  "hooks": {
+    "pre-commit": [
+      {
+        "name": "prettier",
+        "command": "prettier --write",
+        "pattern": "\\.(js|jsx|ts|tsx|json|css|scss|md)$",
+        "autoFix": true
+      }
+    ]
+  }
+}

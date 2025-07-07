@@ -1,0 +1,73 @@
+{
+  "settings": {
+    "parallel": true,
+    "maxParallel": 3,
+    "timing": true
+  },
+  "hooks": {
+    "pre-commit": [
+      {
+        "name": "black",
+        "command": "black",
+        "pattern": "\\.py$",
+        "autoFix": true
+      },
+      {
+        "name": "isort",
+        "command": "isort",
+        "pattern": "\\.py$",
+        "autoFix": true
+      },
+      {
+        "name": "flake8",
+        "command": "flake8",
+        "pattern": "\\.py$",
+        "stopOnError": false
+      },
+      {
+        "name": "mypy",
+        "command": "mypy",
+        "pattern": "\\.py$",
+        "stopOnError": false
+      },
+      {
+        "name": "pylint",
+        "command": "pylint",
+        "pattern": "\\.py$",
+        "stopOnError": false
+      },
+      {
+        "name": "pytest-affected",
+        "command": "pytest",
+        "pattern": "\\.py$",
+        "stopOnError": true
+      },
+      {
+        "name": "docstring-check",
+        "command": "pydocstyle",
+        "pattern": "\\.py$",
+        "stopOnError": false
+      },
+      {
+        "name": "security-bandit",
+        "command": "bandit -r",
+        "pattern": "\\.py$",
+        "stopOnError": false
+      }
+    ],
+    "pre-push": [
+      {
+        "name": "pytest-all",
+        "command": "pytest --cov",
+        "pattern": ".*",
+        "stopOnError": true
+      },
+      {
+        "name": "safety-check",
+        "command": "safety check",
+        "pattern": "requirements\\.txt$",
+        "stopOnError": false
+      }
+    ]
+  }
+}
